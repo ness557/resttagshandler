@@ -1,0 +1,22 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: norepqw2
+    url: jdbc:postgresql://localhost:5432/poems
+
+    dbcp2:
+      max-idle: 5
+  data:
+    jpa:
+      repositories:
+        enabled: true
+
+server:
+  port: 8083
+
+application:
+  update_interval: 10
