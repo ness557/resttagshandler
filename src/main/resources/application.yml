@@ -1,3 +1,6 @@
+application:
+  update_interval: 600
+
 spring:
   jpa:
     hibernate:
@@ -18,5 +21,5 @@ spring:
 server:
   port: 8083
 
-application:
-  update_interval: 10
+
+

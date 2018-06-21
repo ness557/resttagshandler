@@ -4,7 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+//import org.springframework.core.env.Environment;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import simple.microservices.resttagshandler.config.AppProperties;
 import simple.microservices.resttagshandler.model.Tag;
 import simple.microservices.resttagshandler.repository.TagCrudRepository;
 
@@ -17,9 +22,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class InMemoryTagService implements TagService {
 
-    @Value("application.update_interval")
-    private int updateInterval;
-
+    private AppProperties properties;
     private Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     private final ScheduledExecutorService scheduler;
@@ -28,8 +31,9 @@ public class InMemoryTagService implements TagService {
     private final Set<Tag> inMemoryTags;
 
     @Autowired
-    public InMemoryTagService(TagCrudRepository tagCrudRepository){
+    public InMemoryTagService(TagCrudRepository tagCrudRepository, AppProperties appProperties){
         this.repository = tagCrudRepository;
+        this.properties = appProperties;
         inMemoryTags = new HashSet<>();
         scheduler = Executors.newSingleThreadScheduledExecutor();
 
@@ -42,7 +46,7 @@ public class InMemoryTagService implements TagService {
             }
             logger.info("List updated");
         };
-        scheduler.scheduleAtFixedRate( runnable, updateInterval, updateInterval, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate( runnable, properties.getUpdate_interval(), properties.getUpdate_interval(), TimeUnit.SECONDS);
     }
 
     @Override
